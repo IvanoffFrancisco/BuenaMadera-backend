@@ -28,8 +28,7 @@ const SchemaProducto=new Schema({
         required:true
     },
     descuento:{
-        type:Number,
-        required:false
+        type:Number
     },
     envio:["fontana","resistencia","barranqueras"],
     fecha:{
@@ -37,8 +36,7 @@ const SchemaProducto=new Schema({
         default:Date.now()
     },
     estado:{
-        type:String,
-        required:true
+        type:String
     },
 })
 
