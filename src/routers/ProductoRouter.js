@@ -13,6 +13,8 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
         categoria:req.body.categoria,
         cantidad:req.body.cantidad,
         precio:req.body.precio,
+        descuento:req.body.descuento,
+        estado:req.body.estado
     })
     if(req.files["imagen_central"][0]){
         const {originalname}=req.files["imagen_central"][0];
@@ -27,10 +29,18 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
    res.send('se guardo el producto');
 });
 
+//get productos por ID
+router.get("/productos/:id",async (req,res)=>{
+    const pro=await producto.findById(req.params.id);
+    res.json(pro);
+});
+
+
 router.get("/productos",async (req,res)=>{
     const pro=await producto.find();
     res.json(pro);
 });
+
 
 router.post("/modificar-producto",async (req,res)=>{
     await producto.updateOne({_id:req.body.id},{$set:{
@@ -38,6 +48,11 @@ router.post("/modificar-producto",async (req,res)=>{
         ,cantidad:req.body.cantidad,precio:req.body.precio}
     });
     res.send("se modifico el producto");
-})
+});
+
+router.post("/eliminar-producto/:id",async (req,res)=>{
+    await producto.findByIdAndDelete(req.params.id);
+    res.send("se elimino el producto");
+});
 
 module.exports=router;
