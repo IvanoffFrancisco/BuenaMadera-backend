@@ -2,7 +2,9 @@ const {Router}=require('express');
 const router=Router();
 
 const producto=require('../models/ProductoModel');
+const suscribirse=require('../models/Suscriptores');
 const uploadIMG=require("../libs/storage");
+const {enviarMail}=require('../controller/ProductoController');
 
 router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCount: 1 }, { name: 'gallery', maxCount: 8 }]),async (req,res)=>{
     const productoNew=new producto({
@@ -16,6 +18,7 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
         descuento:req.body.descuento,
         estado:req.body.estado
     })
+    //guardar imagenes
     if(req.files["imagen_central"][0]){
         const {originalname}=req.files["imagen_central"][0];
         productoNew.imagen_central="http://localhost:4000/"+originalname;
@@ -25,8 +28,15 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
         }
         productoNew.galeria=arreglo;
     }
+    //enviar mail
+    const sus=await suscribirse.find();
+    for(const item of sus){
+        const {originalname}=req.files["imagen_central"][0];
+        enviarMail(item.email,productoNew,originalname);
+        
+    }
     productoNew.save();
-   res.send('se guardo el producto');
+    res.send('se guardo el producto'); 
 });
 
 //get productos por ID

@@ -18,5 +18,6 @@ app.use(express.static(__dirname+"/storage/imgs"));
 app.use(express.json());
 //routes
 app.use(require('./routers/ProductoRouter'));
+app.use(require("./routers/Suscribirse"));
 
 module.exports=app;
