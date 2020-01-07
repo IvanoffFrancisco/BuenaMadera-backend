@@ -34,7 +34,6 @@ transporter.sendMail(mailOptions, function(error, info){
         res.send(500, err.message);
     } else {
         console.log("Email sent");
-        res.status(200).jsonp(req.body);
     }
 });
 };

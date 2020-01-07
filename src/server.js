@@ -16,8 +16,9 @@ app.use((req, res, next) => {
 // middleware
 app.use(express.static(__dirname+"/storage/imgs"));
 app.use(express.json());
+
 //routes
 app.use(require('./routers/ProductoRouter'));
 app.use(require("./routers/Suscribirse"));
-
+app.use(require('./routers/AdministradorRouter'));
 module.exports=app;
