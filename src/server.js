@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 });
 
 // middleware
-app.use(express.static(__dirname+'/storage/imgs'));
+app.use(express.static('./src/storage'));
 app.use(express.json());
 
 //routes

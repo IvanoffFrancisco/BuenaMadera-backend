@@ -23,7 +23,7 @@ var mailOptions = {
             <p>Precio: ${producto.precio}</p>
         `,attachments: [{
             filename: imagen,
-            path:`./src/storage/imgs/${imagen}`,
+            path:`./src/storage/${imagen}`,
             cid: 'imagen' 
        }]
 };
