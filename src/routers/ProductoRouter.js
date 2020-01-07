@@ -27,23 +27,23 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
             descuento:req.body.descuento,
             estado:req.body.estado
         })
-        // //guardar imagenes
-        // if(req.files["imagen_central"][0]){
-        //     const {originalname}=req.files["imagen_central"][0];
-        //     productoNew.imagen_central="https://buenamadera.herokuapp.com/"+originalname;
-        //     var arreglo=[]
-        //     for (const iterator of req.files['gallery']) {
-        //         arreglo.push("https://buenamadera.herokuapp.com/"+iterator.originalname);
-        //     }
-        //     productoNew.galeria=arreglo;
-        // }
-        // //enviar mail
-        // const sus=await suscribirse.find();
-        // for(const item of sus){
-        //     const {originalname}=req.files["imagen_central"][0];
-        //     enviarMail(item.email,productoNew,originalname);
+        //guardar imagenes
+        if(req.files["imagen_central"][0]){
+            const {originalname}=req.files["imagen_central"][0];
+            productoNew.imagen_central="https://buenamadera.herokuapp.com/"+originalname;
+            var arreglo=[]
+            for (const iterator of req.files['gallery']) {
+                arreglo.push("https://buenamadera.herokuapp.com/"+iterator.originalname);
+            }
+            productoNew.galeria=arreglo;
+        }
+        //enviar mail
+        const sus=await suscribirse.find();
+        for(const item of sus){
+            const {originalname}=req.files["imagen_central"][0];
+            enviarMail(item.email,productoNew,originalname);
             
-        // }
+        }
         productoNew.save();
         res.send('se guardo el producto'); 
         }
