@@ -30,10 +30,10 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
         //guardar imagenes
         if(req.files["imagen_central"][0]){
             const {originalname}=req.files["imagen_central"][0];
-            productoNew.imagen_central="https://buenamadera-api.herokuapp.com/imgs/"+originalname;
+            productoNew.imagen_central="https://buenamadera.herokuapp.com/"+originalname;
             var arreglo=[]
             for (const iterator of req.files['gallery']) {
-                arreglo.push("https://buenamadera-api.herokuapp.com/imgs/"+iterator.originalname);
+                arreglo.push("https://buenamadera.herokuapp.com/"+iterator.originalname);
             }
             productoNew.galeria=arreglo;
         }
