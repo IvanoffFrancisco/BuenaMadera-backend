@@ -33,7 +33,6 @@ transporter.sendMail(mailOptions, function(error, info){
         console.log(error);
         res.send(500, err.message);
     } else {
-        console.log("Email sent");
     }
 });
 };
