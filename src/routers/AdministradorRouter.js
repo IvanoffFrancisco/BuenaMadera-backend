@@ -5,7 +5,6 @@ const admin=require('../models/Administrador');
 const jwt=require('jsonwebtoken');
 
 router.post("/login",async(req,res)=>{
-    
     const nuevoAdmin=await admin.find().countDocuments();
     if(nuevoAdmin==1){
         const ad=await admin.findOne({email:req.body.email});

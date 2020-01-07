@@ -52,34 +52,13 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
 
 //get productos por ID
 router.get("/productos/:id",async (req,res)=>{
-    const token=req.headers['bmtoken3'];
-    if(!token){
-        res.send("no existe el token")
-    }else{
-        const verificarToken=await jwt.verify(token,"BMTOKEN");
-    if(!verificarToken){
-        res.send("el token no es autentico")
-    }else{
-        const pro=await producto.findById(req.params.id);
+    const pro=await producto.findById(req.params.id);
         res.json(pro);
-    }
-    }
 });
 
 router.get("/productos",async (req,res)=>{
-    const token=req.headers['bmtoken3'];
-    if(!token){
-        res.send("no existe el token")
-    }else{
-        const verificarToken=await jwt.verify(token,"BMTOKEN");
-    if(!verificarToken){
-        res.send("el token no es autentico")
-    }else{
-        const pro=await producto.find();
+    const pro=await producto.find();
         res.json(pro);
-    }
-    }
-    
 });
 router.post("/modificar-producto",async (req,res)=>{
     const token=req.headers['bmtoken3'];
@@ -109,7 +88,6 @@ router.post("/modificar-producto",async (req,res)=>{
     }
     
 });
-
 router.post("/eliminar-producto/:id",async (req,res)=>{
     const token=req.headers['bmtoken3'];
     if(!token){
