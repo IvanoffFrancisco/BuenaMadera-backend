@@ -14,10 +14,13 @@ app.use((req, res, next) => {
 });
 
 // middleware
-app.use(express.static('./src/storage'));
+app.use(express.static(__dirname+'/storage'));
 app.use(express.json());
 
 //routes
+app.get("/prueba",(req,res)=>{
+    res.send(__dirname);
+})
 app.use(require('./routers/ProductoRouter'));
 app.use(require("./routers/Suscribirse"));
 app.use(require('./routers/AdministradorRouter'));
