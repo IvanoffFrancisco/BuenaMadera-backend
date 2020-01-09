@@ -15,4 +15,4 @@ SchemaAdmin.methods.ValidarPassword=function(password){
     return bcrypt.compare(password,this.password);
 }
 
-module.exports=model("Administrador",SchemaAdmin);
+module.exports=model("Administradores",SchemaAdmin);

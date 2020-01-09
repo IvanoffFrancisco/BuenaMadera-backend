@@ -1,0 +1,2 @@
+
+//en esta carpeta va todas las imagenes del proyecto

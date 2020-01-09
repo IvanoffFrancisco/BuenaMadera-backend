@@ -18,9 +18,6 @@ app.use(express.static(__dirname+'/storage'));
 app.use(express.json());
 
 //routes
-app.get("/prueba",(req,res)=>{
-    res.send(__dirname);
-})
 app.use(require('./routers/ProductoRouter'));
 app.use(require("./routers/Suscribirse"));
 app.use(require('./routers/AdministradorRouter'));
