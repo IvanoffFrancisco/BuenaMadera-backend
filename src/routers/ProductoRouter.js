@@ -30,10 +30,10 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
         //guardar imagenes
         if(req.files["imagen_central"][0]){
             const {originalname}=req.files["imagen_central"][0];
-            productoNew.imagen_central="http://localhost:4000/"+originalname;
+            productoNew.imagen_central="https://buenamadera.herokuapp.com/"+originalname;
             var arreglo=[]
             for (const iterator of req.files['gallery']) {
-                arreglo.push("http://localhost:4000/"+iterator.originalname);
+                arreglo.push("https://buenamadera.herokuapp.com/"+iterator.originalname);
             }
             productoNew.galeria=arreglo;
         }
@@ -43,6 +43,10 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
             const {originalname}=req.files["imagen_central"][0];
             enviarMail(item.email,productoNew,originalname);
             
+        }
+        const {descuento,precio}=req.body;
+        if(descuento>0){
+        productoNew.precio=precio-(precio*descuento)/100;
         }
         productoNew.save();
         res.send('se guardo el producto'); 
@@ -70,7 +74,7 @@ router.post("/modificar-producto",async (req,res)=>{
         res.send("el token no es autentico")
     }else{
         const {descuento,precio}=req.body;
-    if(descuento>0){
+        if(descuento>0){
         const precioDescuento=precio-(precio*descuento)/100;
         await producto.updateOne({_id:req.body.id},{$set:{
             nombre:req.body.nombre,descripcion:req.body.descripcion,categoria:req.body.categoria

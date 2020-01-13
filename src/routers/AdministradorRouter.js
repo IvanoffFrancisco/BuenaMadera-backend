@@ -9,12 +9,11 @@ router.post("/login",async(req,res)=>{
     if(nuevoAdmin==1){
         const ad=await admin.findOne({email:req.body.email});
             if(!ad){
-                res.send("email y/o contraseñas incorrectas")   
+                res.json({"error":"email y/o contraseñas incorrectas"})   
             }else{
                 const add=await ad.ValidarPassword(req.body.password);
                 if(!add){
-                    res.send("email y/o contraseñas incorrectas")
-                    
+                    res.json({"error":"email y/o contraseñas incorrectas"})  
                 }else{
                     const token=await jwt.sign({id:ad._id},"BMTOKEN");
                     res.json({BMT:token})

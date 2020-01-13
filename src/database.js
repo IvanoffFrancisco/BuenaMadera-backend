@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 
-mongoose.connect(process.env.URL || "mongodb://localhost/buena_madera",{
+mongoose.connect(process.env.URL,{
     useCreateIndex:true,
     useFindAndModify:true,
     useNewUrlParser:true,
