@@ -4,9 +4,20 @@ const router=Router();
 const admin=require('../models/Administrador');
 const jwt=require('jsonwebtoken');
 
+router.post("/registro",async(req,res)=>{
+    const ad=new admin({
+        email:req.body.email,
+        usuario:req.body.usuario,
+        password:req.body.password
+    });
+    
+    ad.password=await ad.HashPassword(ad.password); 
+    
+    await ad.save()
+    res.send("nuevo usuario creado")
+})
+
 router.post("/login",async(req,res)=>{
-    const nuevoAdmin=await admin.find().countDocuments();
-    if(nuevoAdmin==1){
         const ad=await admin.findOne({email:req.body.email});
             if(!ad){
                 res.json({"error":"email y/o contraseñas incorrectas"})   
@@ -19,20 +30,7 @@ router.post("/login",async(req,res)=>{
                     res.json({BMT:token})
                 }
                 
-            }
-
-    }else{
-        const ad=new admin({
-            email:"admin@gmail.com",
-            usuario:"buenaMadera",
-            password:"BMF123"
-        });
-        
-        ad.password=await ad.HashPassword(ad.password); 
-        
-        await ad.save()
-        res.send("nuevo usuario creado")
-    }
+            }  
 })
 
 module.exports=router;

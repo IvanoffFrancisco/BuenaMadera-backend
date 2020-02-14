@@ -14,10 +14,6 @@ app.use((req, res, next) => {
 });
 
 // middleware
-
-app.get("/prueba",(req,res)=>{
-    res.send(__dirname);
-})
 app.use(express.static(__dirname+'/storage'));
 app.use(express.json());
 

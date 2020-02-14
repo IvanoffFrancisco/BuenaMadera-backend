@@ -6,19 +6,13 @@ const suscribirse=require('../models/Suscriptores');
 const uploadIMG=require("../storage");
 const {enviarMail}=require('../controller/ProductoController');
 const jwt=require('jsonwebtoken');
+const Auth=require('../middlewares/Auth');
 
-router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCount: 1 }, { name: 'gallery', maxCount: 8 }]),async (req,res)=>{
-    const token=req.headers['bmtoken3'];
-    if(!token){
-        res.send("no existe el token")
-    }else{
-        const verificarToken=await jwt.verify(token,"BMTOKEN");
-    if(!verificarToken){
-        res.send("el token no es autentico")
-    }else{
+router.post("/nuevo-producto",Auth,uploadIMG.fields([{ name: 'imagen_central', maxCount: 1 }, { name: 'gallery', maxCount: 8 }]),async (req,res)=>{
+        
         const productoNew=new producto({
-            imagen_central:"",
-            galeria:[],
+            imagen_central:req.body.imagen_central,
+            // galeria:[],
             nombre:req.body.nombre,
             descripcion:req.body.descripcion,
             categoria:req.body.categoria,
@@ -28,30 +22,29 @@ router.post("/nuevo-producto",uploadIMG.fields([{ name: 'imagen_central', maxCou
             estado:req.body.estado
         })
         //guardar imagenes
-        if(req.files["imagen_central"][0]){
-            const {originalname}=req.files["imagen_central"][0];
-            productoNew.imagen_central="https://buenamadera.herokuapp.com/"+originalname;
-            var arreglo=[]
-            for (const iterator of req.files['gallery']) {
-                arreglo.push("https://buenamadera.herokuapp.com/"+iterator.originalname);
-            }
-            productoNew.galeria=arreglo;
-        }
+        // if(req.files["imagen_central"][0]){
+        //     const {originalname}=req.files["imagen_central"][0];
+        //     productoNew.imagen_central="https://buenamadera.herokuapp.com/"+originalname;
+        //     var arreglo=[]
+        //     for (const iterator of req.files['gallery']) {
+        //         arreglo.push("https://buenamadera.herokuapp.com/"+iterator.originalname);
+        //     }
+        //     productoNew.galeria=arreglo;
+        // }
         //enviar mail
-        const sus=await suscribirse.find();
-        for(const item of sus){
-            const {originalname}=req.files["imagen_central"][0];
-            enviarMail(item.email,productoNew,originalname);
+        // const sus=await suscribirse.find();
+        // for(const item of sus){
+        //     const {originalname}=req.files["imagen_central"][0];
+        //     enviarMail(item.email,productoNew,originalname);
             
-        }
+        // }
         const {descuento,precio}=req.body;
         if(descuento>0){
         productoNew.precio=precio-(precio*descuento)/100;
         }
+
         productoNew.save();
         res.send('se guardo el producto'); 
-        }
-    }
 });
 
 //get productos por ID
@@ -65,14 +58,7 @@ router.get("/productos",async (req,res)=>{
         res.json(pro);
 });
 router.post("/modificar-producto",async (req,res)=>{
-    const token=req.headers['bmtoken3'];
-    if(!token){
-        res.send("no existe el token")
-    }else{
-        const verificarToken=await jwt.verify(token,"BMTOKEN");
-    if(!verificarToken){
-        res.send("el token no es autentico")
-    }else{
+    
         const {descuento,precio}=req.body;
         if(descuento>0){
         const precioDescuento=precio-(precio*descuento)/100;
@@ -88,24 +74,10 @@ router.post("/modificar-producto",async (req,res)=>{
         });
         res.send("se modifico el producto");
     }
-    }
-    }
-    
 });
-router.post("/eliminar-producto/:id",async (req,res)=>{
-    const token=req.headers['bmtoken3'];
-    if(!token){
-        res.send("no existe el token")
-    }else{
-        const verificarToken=await jwt.verify(token,"BMTOKEN");
-    if(!verificarToken){
-        res.send("el token no es autentico")
-    }else{
+router.post("/eliminar-producto/:id",Auth ,async (req,res)=>{
         await producto.findByIdAndDelete(req.params.id);
         res.send("se elimino el producto");
-    }
-    }
-    
 });
 
 module.exports=router;
