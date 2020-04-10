@@ -1,83 +1,17 @@
 const {Router}=require('express');
 const router=Router();
-
-const producto=require('../models/ProductoModel');
-const suscribirse=require('../models/Suscriptores');
-const uploadIMG=require("../storage");
-const {enviarMail}=require('../controller/ProductoController');
-const jwt=require('jsonwebtoken');
+const {getProducto,getProductosID,eliminarProducto,createProducto,updateProducto}=require('../controller/ProductoController');
 const Auth=require('../middlewares/Auth');
 
-router.post("/nuevo-producto",Auth,uploadIMG.fields([{ name: 'imagen_central', maxCount: 1 }, { name: 'gallery', maxCount: 8 }]),async (req,res)=>{
-        
-        const productoNew=new producto({
-            imagen_central:req.body.imagen_central,
-            // galeria:[],
-            nombre:req.body.nombre,
-            descripcion:req.body.descripcion,
-            categoria:req.body.categoria,
-            cantidad:req.body.cantidad,
-            precio:req.body.precio,
-            descuento:req.body.descuento,
-            estado:req.body.estado
-        })
-        //guardar imagenes
-        // if(req.files["imagen_central"][0]){
-        //     const {originalname}=req.files["imagen_central"][0];
-        //     productoNew.imagen_central="https://buenamadera.herokuapp.com/"+originalname;
-        //     var arreglo=[]
-        //     for (const iterator of req.files['gallery']) {
-        //         arreglo.push("https://buenamadera.herokuapp.com/"+iterator.originalname);
-        //     }
-        //     productoNew.galeria=arreglo;
-        // }
-        //enviar mail
-        // const sus=await suscribirse.find();
-        // for(const item of sus){
-        //     const {originalname}=req.files["imagen_central"][0];
-        //     enviarMail(item.email,productoNew,originalname);
-            
-        // }
-        const {descuento,precio}=req.body;
-        if(descuento>0){
-        productoNew.precio=precio-(precio*descuento)/100;
-        }
-
-        productoNew.save();
-        res.send('se guardo el producto'); 
-});
+router.post("/nuevo-producto",Auth,uploadIMG.fields([{ name: 'imagen_central', maxCount: 1 }, { name: 'gallery', maxCount: 8 }]),createProducto);
 
 //get productos por ID
-router.get("/productos/:id",async (req,res)=>{
-    const pro=await producto.findById(req.params.id);
-        res.json(pro);
-});
+router.get("/productos/:id",getProductosID);
 
-router.get("/productos",async (req,res)=>{
-    const pro=await producto.find();
-        res.json(pro);
-});
-router.post("/modificar-producto",async (req,res)=>{
-    
-        const {descuento,precio}=req.body;
-        if(descuento>0){
-        const precioDescuento=precio-(precio*descuento)/100;
-        await producto.updateOne({_id:req.body.id},{$set:{
-            nombre:req.body.nombre,descripcion:req.body.descripcion,categoria:req.body.categoria
-            ,cantidad:req.body.cantidad,precio:precioDescuento,descuento:req.body.descuento,estado:req.body.estado}
-        });
-        res.send("se modifico el producto");
-    }else{
-        await producto.updateOne({_id:req.body.id},{$set:{
-            nombre:req.body.nombre,descripcion:req.body.descripcion,categoria:req.body.categoria
-            ,cantidad:req.body.cantidad,precio:req.body.precio,descuento:req.body.descuento,estado:req.body.estado}
-        });
-        res.send("se modifico el producto");
-    }
-});
-router.post("/eliminar-producto/:id",Auth ,async (req,res)=>{
-        await producto.findByIdAndDelete(req.params.id);
-        res.send("se elimino el producto");
-});
+router.get("/productos",getProducto);
+
+router.post("/modificar-producto",Auth,updateProducto);
+
+router.post("/eliminar-producto/:id",Auth,eliminarProducto);
 
 module.exports=router;
